@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_bootstrap5',
     'tasks',
+    'users', 
 ]
 
 MIDDLEWARE = [
@@ -68,7 +69,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
@@ -78,3 +79,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
