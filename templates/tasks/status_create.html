@@ -3,11 +3,11 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h1>Создать статус</h1>
+    <h1>Crear estado</h1>
     <form method="post">
         {% csrf_token %}
         {% bootstrap_form form %}
-        <button type="submit" class="btn btn-primary mt-3">Создать</button>
+        <button type="submit" class="btn btn-primary mt-3">Crear</button>
     </form>
 </div>
 {% endblock %}
