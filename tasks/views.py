@@ -5,8 +5,8 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import ProtectedError
 from django.shortcuts import redirect
 from django.contrib import messages
-from .models import Status, Task
-from .forms import StatusForm, TaskForm
+from .models import Status, Label, Task
+from .forms import StatusForm, LabelForm, TaskForm
 
 
 # ============ ESTADOS ============
@@ -93,3 +93,42 @@ class TaskDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def form_valid(self, form):
         messages.success(self.request, 'Tarea eliminada con éxito.')
         return super().form_valid(form)
+
+
+# ============ ETIQUETAS ============
+
+class LabelListView(LoginRequiredMixin, ListView):
+    model = Label
+    template_name = 'tasks/label_list.html'
+    context_object_name = 'labels'
+
+
+class LabelCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    model = Label
+    form_class = LabelForm
+    template_name = 'tasks/label_create.html'
+    success_url = reverse_lazy('label_list')
+    success_message = 'Etiqueta creada exitosamente.'
+
+
+class LabelUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = Label
+    form_class = LabelForm
+    template_name = 'tasks/label_update.html'
+    success_url = reverse_lazy('label_list')
+    success_message = 'Etiqueta actualizada exitosamente.'
+
+
+class LabelDeleteView(LoginRequiredMixin, DeleteView):
+    model = Label
+    template_name = 'tasks/label_delete.html'
+    success_url = reverse_lazy('label_list')
+
+    def form_valid(self, form):
+        try:
+            response = super().form_valid(form)
+            messages.success(self.request, 'Etiqueta eliminada exitosamente.')
+            return response
+        except ProtectedError:
+            messages.error(self.request, 'No se puede eliminar la etiqueta porque está en uso.')
+            return redirect('label_list')

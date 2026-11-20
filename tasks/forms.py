@@ -1,10 +1,19 @@
 from django import forms
-from .models import Status, Task
+from .models import Status, Label, Task
 
 
 class StatusForm(forms.ModelForm):
     class Meta:
         model = Status
+        fields = ['name']
+        labels = {
+            'name': 'Nombre',
+        }
+
+
+class LabelForm(forms.ModelForm):
+    class Meta:
+        model = Label
         fields = ['name']
         labels = {
             'name': 'Nombre',
