@@ -1,10 +1,10 @@
 {% load django_bootstrap5 %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}Task Manager{% endblock %}</title>
+    <title>{% block title %}Gestor de tareas{% endblock %}</title>
     {% bootstrap_css %}
     {% bootstrap_javascript %}
 </head>
@@ -12,14 +12,38 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="/">Gestor de tareas</a>
-            <div class="navbar-nav ms-auto">
+            
+            <div class="navbar-nav ms-auto align-items-center">
                 <a class="nav-link" href="{% url 'users_list' %}">Usuarios</a>
-                <a class="nav-link" href="{% url 'login' %}">Iniciar sesión</a>
-                <a class="nav-link" href="{% url 'user_create' %}">Registrarse</a>
+                
+                {% if user.is_authenticated %}
+                    <a class="nav-link" href="{% url 'status_list' %}">Estados</a>
+                    
+                    <!-- Logout debe ser un formulario POST por seguridad en Django 5+ -->
+                    <form method="post" action="{% url 'logout' %}" class="d-inline m-0">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link btn btn-link" style="border: none; background: none;">Cerrar sesión</button>
+                    </form>
+                {% else %}
+                    <a class="nav-link" href="{% url 'login' %}">Iniciar sesión</a>
+                    <a class="nav-link" href="{% url 'user_create' %}">Registrarse</a>
+                {% endif %}
             </div>
         </div>
     </nav>
+
     <div class="container mt-4">
+        <!-- Aquí se mostrarán los mensajes flash (éxito, error, etc.) -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Aquí va el contenido específico de cada página -->
         {% block content %}{% endblock %}
     </div>
 </body>

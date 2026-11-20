@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Estados</h1>
+    <a href="{% url 'status_create' %}" class="btn btn-primary mb-3">Crear estado</a>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Fecha de creación</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for status in statuses %}
+            <tr>
+                <td>{{ status.id }}</td>
+                <td>{{ status.name }}</td>
+                <td>{{ status.created_at|date:"d.m.Y H:i" }}</td>
+                <td>
+                    <a href="{% url 'status_update' status.pk %}" class="btn btn-sm btn-outline-primary">Editar</a>
+                    <a href="{% url 'status_delete' status.pk %}" class="btn btn-sm btn-outline-danger">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
