@@ -18,8 +18,8 @@
                 
                 {% if user.is_authenticated %}
                     <a class="nav-link" href="{% url 'status_list' %}">Estados</a>
+                    <a class="nav-link" href="{% url 'task_list' %}">Tareas</a>
                     
-                    <!-- Logout debe ser un formulario POST por seguridad en Django 5+ -->
                     <form method="post" action="{% url 'logout' %}" class="d-inline m-0">
                         {% csrf_token %}
                         <button type="submit" class="nav-link btn btn-link" style="border: none; background: none;">Cerrar sesión</button>
@@ -33,7 +33,6 @@
     </nav>
 
     <div class="container mt-4">
-        <!-- Aquí se mostrarán los mensajes flash (éxito, error, etc.) -->
         {% if messages %}
             {% for message in messages %}
                 <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
@@ -43,7 +42,6 @@
             {% endfor %}
         {% endif %}
 
-        <!-- Aquí va el contenido específico de cada página -->
         {% block content %}{% endblock %}
     </div>
 </body>

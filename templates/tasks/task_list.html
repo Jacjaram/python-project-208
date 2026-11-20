@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Tareas</h1>
+    <a href="{% url 'task_create' %}" class="btn btn-primary mb-3">Crear tarea</a>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Estado</th>
+                <th>Autor</th>
+                <th>Ejecutor</th>
+                <th>Fecha de creación</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task.id }}</td>
+                <td>{{ task.name }}</td>
+                <td>{{ task.status.name }}</td>
+                <td>{{ task.author.get_full_name|default:task.author.username }}</td>
+                <td>{{ task.executor.get_full_name|default:task.executor.username }}</td>
+                <td>{{ task.created_at|date:"d.m.Y H:i" }}</td>
+                <td>
+                    <a href="{% url 'task_detail' task.pk %}" class="btn btn-sm btn-outline-info">Ver</a>
+                    <a href="{% url 'task_update' task.pk %}" class="btn btn-sm btn-outline-primary">Editar</a>
+                    {% if task.author == user %}
+                        <a href="{% url 'task_delete' task.pk %}" class="btn btn-sm btn-outline-danger">Eliminar</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

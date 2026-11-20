@@ -1,13 +1,15 @@
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import ProtectedError
 from django.shortcuts import redirect
 from django.contrib import messages
-from .models import Status
-from .forms import StatusForm
+from .models import Status, Task
+from .forms import StatusForm, TaskForm
 
+
+# ============ ESTADOS ============
 
 class StatusListView(LoginRequiredMixin, ListView):
     model = Status
@@ -44,3 +46,50 @@ class StatusDeleteView(LoginRequiredMixin, DeleteView):
         except ProtectedError:
             messages.error(self.request, 'No se puede eliminar el estado porque está en uso.')
             return redirect('status_list')
+
+
+# ============ TAREAS ============
+
+class TaskListView(LoginRequiredMixin, ListView):
+    model = Task
+    template_name = 'tasks/task_list.html'
+    context_object_name = 'tasks'
+
+
+class TaskDetailView(LoginRequiredMixin, DetailView):
+    model = Task
+    template_name = 'tasks/task_detail.html'
+    context_object_name = 'task'
+
+
+class TaskCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    model = Task
+    form_class = TaskForm
+    template_name = 'tasks/task_create.html'
+    success_url = reverse_lazy('task_list')
+    success_message = 'Tarea creada con éxito.'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+
+class TaskUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = Task
+    form_class = TaskForm
+    template_name = 'tasks/task_update.html'
+    success_url = reverse_lazy('task_list')
+    success_message = 'Tarea actualizada con éxito.'
+
+
+class TaskDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Task
+    template_name = 'tasks/task_delete.html'
+    success_url = reverse_lazy('task_list')
+
+    def test_func(self):
+        return self.get_object().author == self.request.user
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Tarea eliminada con éxito.')
+        return super().form_valid(form)
