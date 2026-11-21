@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 import dj_database_url
+import sentry_sdk
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -23,7 +24,7 @@ INSTALLED_APPS = [
     'django_bootstrap5',
     'django_filters',
     'tasks',
-    'users', 
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -81,6 +82,14 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Configuración de autenticación
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
+
+# Sentry para monitoreo de errores
+sentry_sdk.init(
+    dsn=os.environ.get('SENTRY_DSN'),
+    environment='production',
+    traces_sample_rate=1.0,
+)
