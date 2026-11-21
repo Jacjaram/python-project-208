@@ -5,8 +5,10 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import ProtectedError
 from django.shortcuts import redirect
 from django.contrib import messages
+from django_filters.views import FilterView
 from .models import Status, Label, Task
 from .forms import StatusForm, LabelForm, TaskForm
+from .filters import TaskFilter
 
 
 # ============ ESTADOS ============
@@ -50,10 +52,16 @@ class StatusDeleteView(LoginRequiredMixin, DeleteView):
 
 # ============ TAREAS ============
 
-class TaskListView(LoginRequiredMixin, ListView):
+class TaskListView(LoginRequiredMixin, FilterView):
     model = Task
+    filterset_class = TaskFilter
     template_name = 'tasks/task_list.html'
     context_object_name = 'tasks'
+
+    def get_filterset_kwargs(self, filterset_class):
+        kwargs = super().get_filterset_kwargs(filterset_class)
+        kwargs['request'] = self.request
+        return kwargs
 
 
 class TaskDetailView(LoginRequiredMixin, DetailView):
@@ -125,10 +133,10 @@ class LabelDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('label_list')
 
     def form_valid(self, form):
-        try:
-            response = super().form_valid(form)
-            messages.success(self.request, 'Etiqueta eliminada exitosamente.')
-            return response
-        except ProtectedError:
+        label = self.get_object()
+        if label.task_set.exists():  # o label.tasks.exists() según el related_name
             messages.error(self.request, 'No se puede eliminar la etiqueta porque está en uso.')
             return redirect('label_list')
+        response = super().form_valid(form)
+        messages.success(self.request, 'Etiqueta eliminada exitosamente.')
+        return response

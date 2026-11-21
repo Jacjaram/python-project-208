@@ -5,6 +5,28 @@
 <div class="container mt-4">
     <h1>Tareas</h1>
     <a href="{% url 'task_create' %}" class="btn btn-primary mb-3">Crear tarea</a>
+
+    <!-- Formulario de filtros -->
+    <div class="card mb-3">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                {% for field in filter.form %}
+                    <div class="col-md-3">
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="text-danger">{{ field.errors }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <div class="col-12">
+                    <button type="submit" class="btn btn-outline-primary">Filtrar</button>
+                    <a href="{% url 'task_list' %}" class="btn btn-outline-secondary">Limpiar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <table class="table table-striped">
         <thead>
             <tr>
@@ -33,6 +55,10 @@
                         <a href="{% url 'task_delete' task.pk %}" class="btn btn-sm btn-outline-danger">Eliminar</a>
                     {% endif %}
                 </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center">No hay tareas que coincidan con los filtros.</td>
             </tr>
             {% endfor %}
         </tbody>
