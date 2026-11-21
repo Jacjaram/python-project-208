@@ -82,12 +82,10 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Configuración de autenticación
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 
-# Sentry para monitoreo de errores
 sentry_sdk.init(
     dsn=os.environ.get('SENTRY_DSN'),
     environment='production',
