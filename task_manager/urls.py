@@ -6,12 +6,8 @@ import sentry_sdk
 
 
 def trigger_error(request):
-    try:
-        1 / 0
-    except Exception as e:
-        sentry_sdk.capture_exception(e)
-        sentry_sdk.flush()
-    return HttpResponse("Error enviado a Sentry", status=500)
+    sentry_sdk.capture_message("Prueba de Bugsink desde Render", level="error")
+    return HttpResponse("Mensaje enviado a Sentry", status=200)
 
 
 urlpatterns = [

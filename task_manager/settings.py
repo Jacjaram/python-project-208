@@ -89,8 +89,7 @@ LOGOUT_REDIRECT_URL = 'home'
 sentry_sdk.init(
     dsn=os.environ.get('SENTRY_DSN'),
     environment='production',
-    traces_sample_rate=1.0,
     debug=True,
 )
 
-print(f"SENTRY_DSN presente: {bool(os.environ.get('SENTRY_DSN'))}")
+print(f"DEBUG SENTRY: DSN={os.environ.get('SENTRY_DSN')}")
