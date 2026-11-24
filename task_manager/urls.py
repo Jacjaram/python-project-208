@@ -2,12 +2,14 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
 from django.http import HttpResponse
-
+import sentry_sdk
 
 def trigger_error(request):
-    division_by_zero = 1 / 0
-    return HttpResponse("No deberías ver esto")
-
+    try:
+        1 / 0
+    except Exception as e:
+        sentry_sdk.capture_exception(e)
+    return HttpResponse("Error enviado a Sentry", status=500)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
