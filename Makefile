@@ -2,7 +2,7 @@ setup:
 	pip install -r requirements.txt
 
 start-server:
-	python manage.py runserver 0.0.0.0:3000
+	uv run python manage.py runserver 0.0.0.0:3000
 
 build:
 	./build.sh
