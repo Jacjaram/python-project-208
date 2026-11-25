@@ -1,8 +1,8 @@
 setup:
-	uv sync
+	pip install -r requirements.txt
 
 start-server:
-	uv run python manage.py runserver 0.0.0.0:3000
+	python manage.py runserver 0.0.0.0:3000
 
 build:
 	./build.sh
