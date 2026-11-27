@@ -1,23 +1,23 @@
 setup:
-	pip install -r requirements.txt
+	cd code && uv sync
 
 start-server:
-	uv run python manage.py runserver 0.0.0.0:3000
+	cd code && uv run python manage.py runserver 0.0.0.0:3000
 
 build:
 	./build.sh
 
 install:
-	uv sync
+	cd code && uv sync
 
 collectstatic:
-	uv run python manage.py collectstatic --noinput
+	cd code && uv run python manage.py collectstatic --noinput
 
 migrate:
-	uv run python manage.py migrate
+	cd code && uv run python manage.py migrate
 
 render-start:
-	uv run gunicorn task_manager.wsgi
+	cd code && uv run gunicorn task_manager.wsgi
 
 start:
-	uv run python manage.py runserver
+	cd code && uv run python manage.py runserver
